@@ -21,21 +21,15 @@ public class BroadcastsTime implements Comparable<BroadcastsTime>{
     }
 
     public boolean after(BroadcastsTime t) {
-        return ((getHour() >= t.getHour()) && (getMinutes() > t.getMinutes()));
+        return (this.hour > t.hour) || (this.hour == t.hour && this.minutes > t.minutes);
     }
 
     public boolean before(BroadcastsTime t) {
-        return ((getHour() <= t.getHour()) && (getMinutes() < t.getMinutes()));
+        return (this.hour < t.hour) || (this.hour == t.hour && this.minutes < t.minutes);
     }
 
-    boolean between(BroadcastsTime t1, BroadcastsTime t2) {
-        if ( (getHour() < t2.getHour()) && (getHour() > t1.getMinutes()))
-            return true;
-        else if ((getHour() > t2.getHour()) && (getHour() < t1.getHour()))
-            return false;
-        else {
-            return ( (getMinutes() < t2.getMinutes()) && (getMinutes() > t1.getMinutes()));
-        }
+    public boolean between(BroadcastsTime t1, BroadcastsTime t2) {
+        return (this.after(t1) || this.equals(t1)) && (this.before(t2) || this.equals(t2));
     }
 
     @Override
