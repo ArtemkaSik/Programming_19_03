@@ -1,9 +1,5 @@
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,9 +17,7 @@ public class Main {
             read = s.nextLine();
             List<Program> channelList = new ArrayList<Program>();
             while ((read.charAt(0) != '#') && (s.hasNextLine())) {
-                byte hour = Byte.parseByte("" + read.charAt(0) + read.charAt(1));
-                byte minutes = Byte.parseByte("" + read.charAt(3) + read.charAt(4));
-                BroadcastsTime data = new BroadcastsTime(hour,  minutes);
+                BroadcastsTime data = new BroadcastsTime(read);
                 String name = s.nextLine();
                 allPrograms.add(new Program(channel, data, name));
                 channelList.add(new Program(channel, data, name));
@@ -32,18 +26,24 @@ public class Main {
             };
             programsMap.put(channel, channelList);
         }
+        s.close();
 
         // 5. Создать List<программа> со всеми программами всех каналов
         for (List<Program> programs : programsMap.values()) {
             allPrograms.addAll(programs);
         }
 
+
         //6. вывести все программы в порядке возрастания времени показа
+
+        System.out.println(6 + " вывести все программы в порядке возрастания времени показа");
         Collections.sort(allPrograms, Comparator.comparing(program -> program.getTime()));
+        System.out.println(allPrograms);
+
 
         //7. вывести все программы, которые идут сейчас
-        System.out.println("все программы, которые идут сейчас");
-        BroadcastsTime currentTime = new BroadcastsTime( 15,  10); // Пример текущего времени
+        System.out.println(7 + " вывести все программы, которые идут сейчас ");
+        BroadcastsTime currentTime = new BroadcastsTime( "15:10"); // Пример текущего времени
         for (Program program : allPrograms) {
             if (program.getTime().equals(currentTime)) {
                 System.out.println(program.getName());
@@ -51,15 +51,19 @@ public class Main {
         };
 
 
+
         //8. Найти все программы по некоторому названию:
-        String searchName = "Доброе утро. Суббота";
+        System.out.println(8 + " найти все программы по некоторому названию:");
+        String searchName = "Умницы и умники";
         List<Program> foundPrograms = allPrograms.stream()
                 .filter(program -> program.getName().equals(searchName))
                 .collect(Collectors.toList());
+        System.out.println(foundPrograms);
+
 
         //9 Найти все программы определенного канала, которые идут сейчас:
-        System.out.println("все программы определенного канала, которые идут сейчас");
-        BroadcastsTime currentTime1 = new BroadcastsTime( 15,  10); // Пример текущего времени1
+        System.out.println(9);
+        BroadcastsTime currentTime1 = new BroadcastsTime( (byte) 13,  (byte) 10); // Пример текущего времени1
         String channelName = "#Первый";
         List<Program> channelPrograms = programsMap.get(channelName);
         if (channelPrograms != null) {
@@ -71,9 +75,9 @@ public class Main {
         }
 
         //10 найти все программы определенного канала, которые будут идти в некотором промежутке времени
-        System.out.println("все программы определенного канала, которые будут идти в некотором промежутке времени");
-        BroadcastsTime startTime = new BroadcastsTime( 5,  0); // Example start time
-        BroadcastsTime endTime = new BroadcastsTime( 9,  0); // Example end time
+        System.out.println(10);
+        BroadcastsTime startTime = new BroadcastsTime((byte) 5, (byte) 0); // Example start time
+        BroadcastsTime endTime = new BroadcastsTime((byte) 9, (byte) 0); // Example end time
         for (Program program : channelPrograms) {
             if (program.getTime().between(startTime, endTime)) {
                 System.out.println(program.getName());

@@ -1,10 +1,15 @@
 public class BroadcastsTime implements Comparable<BroadcastsTime>{
-    private int hour;
-    private int minutes;
+    private byte hour;
+    private byte minutes;
 
-    public BroadcastsTime(int hour, int minutes) {
+    public BroadcastsTime(byte hour, byte minutes) {
         this.hour = hour;
         this.minutes = minutes;
+    }
+
+    BroadcastsTime(String data) {
+        this.hour = Byte.parseByte("" + data.charAt(0) + data.charAt(1));
+        this.minutes = Byte.parseByte("" + data.charAt(3) + data.charAt(4));
     }
 
     public int getHour() {
@@ -16,22 +21,39 @@ public class BroadcastsTime implements Comparable<BroadcastsTime>{
     }
 
     public boolean after(BroadcastsTime t) {
-        return (this.hour > t.hour) || (this.hour == t.hour && this.minutes > t.minutes);
+        return ((getHour() >= t.getHour()) && (getMinutes() > t.getMinutes()));
     }
 
     public boolean before(BroadcastsTime t) {
-        return (this.hour < t.hour) || (this.hour == t.hour && this.minutes < t.minutes);
+        return ((getHour() <= t.getHour()) && (getMinutes() < t.getMinutes()));
     }
 
-    public boolean between(BroadcastsTime t1, BroadcastsTime t2) {
-        return (this.after(t1) || this.equals(t1)) && (this.before(t2) || this.equals(t2));
+    boolean between(BroadcastsTime t1, BroadcastsTime t2) {
+        if ( (getHour() < t2.getHour()) && (getHour() > t1.getMinutes()))
+            return true;
+        else if ((getHour() > t2.getHour()) && (getHour() < t1.getHour()))
+            return false;
+        else {
+            return ( (getMinutes() < t2.getMinutes()) && (getMinutes() > t1.getMinutes()));
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        BroadcastsTime bt = (BroadcastsTime) obj;
+        return ((bt.getHour() == getHour()) && (bt.getMinutes() == getMinutes()));
     }
 
     @Override
     public int compareTo(BroadcastsTime t) {
-        if (this.hour == t.hour) {
-            return Integer.compare(this.minutes, t.minutes);
-        }
-        return Integer.compare(this.hour, t.hour);
+        if (getHour() != t.getHour())
+            return getHour() - t.getHour();
+        else
+            return getMinutes() - t.getMinutes();
+    }
+
+    @Override
+    public String toString(){
+        return "" + hour + ":" + minutes;
     }
 }

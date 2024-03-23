@@ -9,6 +9,11 @@ class Program {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return "" + channel + " " + time + " " + name;
+    }
+
     public BroadcastsTime getTime() {
         return time;
     }
